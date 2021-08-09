@@ -1,0 +1,214 @@
+recognize
+
+else if(commands.length >= 1 && commands[0].equals("recognize") &&
+                    connect(audioDataHolder, event))
+            {
+               event.getChannel().sendMessage("Starting song recognition." +
+                       " Please mute yourself when you're done or the song " +
+                       "recognition will automatically end after " +
+                       MUSIC_RECOGNIZER_SECONDS_TIMEOUT + " seconds.")
+                       .queue();
+               Member member = event.getMember();
+               if(member!=null)
+               {
+                  if(commands.length==1)
+                  {
+                     audioDataHolder.recognizerSlightDestroy();
+                     audioDataHolder.recognizerBuild(
+                             new MyMusicRecognizerResultHandler(event,
+                                     audioDataHolder)
+                             , event.getJDA());
+                     audioDataHolder.recognizer.record(member,
+                             MUSIC_RECOGNIZER_SECONDS_TIMEOUT, true);
+                  }
+                  else if(commands.length==2 && commands[1].equals("play"))
+                  {
+                     audioDataHolder.recognizerSlightDestroy();
+                     audioDataHolder.recognizerBuild(
+                             new MyMusicRecognizerResultHandler(event,
+                                     audioDataHolder)
+                             {
+                                @Override
+                                public void musicRecognized(String artist,
+                                                            String songTitle)
+                                {
+                                   event.getChannel().sendMessage("Recognized.").
+                                           queue();
+                                   event.getChannel().sendMessage("The song is: "
+                                           + artist + " - " + songTitle).queue();
+                                   audioDataHolder.playerBuild();
+                                   GuildAudioDataHolder.playerManager.loadItem(
+                                           commands[1], new
+                                           MyAudioLoadResultHandler
+                                           (event, audioDataHolder.trackScheduler,
+                                                   GuildAudioDataHolder.playerManager,
+                                             artist + " - " + songTitle));
+                                   audioDataHolder.recognizerSlightDestroy();
+                                }
+                             }
+                             , event.getJDA());
+                     audioDataHolder.recognizer.record(member,
+                             MUSIC_RECOGNIZER_SECONDS_TIMEOUT, true);
+                  }
+               }
+            }
+
+guildaudiodataholder:
+package geniusBot.musicUtilities;
+
+import java.util.Map;
+
+import com.sedmelluq.discord.lavaplayer.player.*;
+import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
+
+import geniusBot.musicUtilities.musicPlayer.AudioPlayerSendHandler;
+import geniusBot.musicUtilities.musicPlayer.TrackScheduler;
+import geniusBot.musicRecognizer.MusicRecognizer;
+import geniusBot.musicRecognizer.MusicRecognizerManager;
+import geniusBot.musicRecognizer.MusicRecognizerResultHandler;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.events.guild.GenericGuildEvent;
+import net.dv8tion.jda.api.managers.AudioManager;
+import org.jetbrains.annotations.NotNull;
+
+public class GuildAudioDataHolder
+{
+   static final AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
+   AudioManager audioManager;
+   AudioPlayer player;
+   TrackScheduler trackScheduler;
+   static final MusicRecognizerManager recognizerManager = new MusicRecognizerManager();
+   volatile MusicRecognizer recognizer;
+   long serverId;
+
+   static
+   {
+      AudioSourceManagers.registerRemoteSources(playerManager);
+   }
+
+   GuildAudioDataHolder(GenericGuildEvent event)
+   {
+      audioManager = event.getGuild().getAudioManager();
+      serverId = event.getGuild().getIdLong();
+   }
+
+   public void playerBuild()
+   {
+      if(player == null || trackScheduler == null)
+      {
+         player = playerManager.createPlayer();
+         audioManager.setSendingHandler(new AudioPlayerSendHandler(player));
+         trackScheduler = new TrackScheduler(player, this);
+         player.addListener(trackScheduler);
+      }
+   }
+
+   public void recognizerBuild(@NotNull MusicRecognizerResultHandler
+                                       resultHandler, @NotNull JDA jda)
+   {
+      if(recognizer == null)
+      {
+         recognizer = recognizerManager.createMusicRecognizer(audioManager,
+                 resultHandler, jda);
+      }
+   }
+
+   public void recognizerSlightDestroy()
+   {
+      if(recognizer!=null)
+         recognizer.destroy();
+      recognizer = null;
+   }
+
+   public void playerSlightDestroy()
+   {
+      if(player!=null)
+         player.destroy();
+      player = null;
+      trackScheduler = null;
+   }
+
+   public void destroy(@NotNull Map<Long, GuildAudioDataHolder> guildAudioData)
+   {
+      playerSlightDestroy();
+      recognizerSlightDestroy();
+      if(audioManager!=null)
+      {
+         audioManager.setSendingHandler(null);
+         audioManager.closeAudioConnection();
+      }
+      audioManager = null;
+      guildAudioData.remove(serverId);
+   }
+
+   public void safeDisconnect()
+   {
+      if(audioManager!=null)
+         audioManager.closeAudioConnection();
+   }
+}
+
+myresultrecognzierhandler
+
+package geniusBot.musicUtilities.musicRecognizer;
+
+import geniusBot.musicRecognizer.MusicRecognizerResultHandler;
+import geniusBot.musicUtilities.GuildAudioDataHolder;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.events.message.guild.GenericGuildMessageEvent;
+import org.jetbrains.annotations.NotNull;
+
+public class MyMusicRecognizerResultHandler implements
+        MusicRecognizerResultHandler
+{
+   GenericGuildMessageEvent event;
+   GuildAudioDataHolder audioDataHolder;
+
+   public MyMusicRecognizerResultHandler(@NotNull GenericGuildMessageEvent event,
+                                  @NotNull GuildAudioDataHolder audioDataHolder)
+   {
+      this.event = event;
+      this.audioDataHolder = audioDataHolder;
+   }
+
+   @Override
+   public void musicRecognized(String artist,
+                               String songTitle)
+   {
+      event.getChannel().sendMessage("Recognized.").
+              queue();
+      event.getChannel().sendMessage("The song is: "
+              + artist + " - " + songTitle).queue();
+      audioDataHolder.recognizerSlightDestroy();
+   }
+
+   @Override
+   public void musicRecognizeFailed()
+   {
+      event.getChannel().sendMessage("We " +
+              "failed to recognize this song.").queue();
+      audioDataHolder.recognizerSlightDestroy();
+   }
+
+   @Override
+   public void musicRecognizeError()
+   {
+      event.getChannel().sendMessage("An " +
+              "internal server error has" +
+              " occured.").queue();
+      audioDataHolder.recognizerSlightDestroy();
+   }
+
+   @Override
+   public void recognizeTerminated()
+   {
+      audioDataHolder.recognizerSlightDestroy();
+   }
+
+   @Override
+   public void recognizeInProgress()
+   {
+      event.getChannel().sendMessage("Recognizing" +
+              " song, please wait.").queue();
+   }
+}
