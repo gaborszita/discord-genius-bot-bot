@@ -17,7 +17,7 @@
  * along with Discord Genius Bot.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package help;
+package geniusBot.help;
 
 import java.sql.*;
 import geniusBot.commandUtils.*;

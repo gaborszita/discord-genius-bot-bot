@@ -26,7 +26,7 @@ import geniusBot.communicating.Communicating;
 import geniusBot.counting.CountingWithMySQL;
 import geniusBot.moderating.Moderating;
 import geniusBot.musicUtilities.MusicCore;
-import help.UserHelping;
+import geniusBot.help.UserHelping;
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.RichPresence;
