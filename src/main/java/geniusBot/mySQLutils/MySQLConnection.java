@@ -20,6 +20,7 @@
 package geniusBot.mySQLutils;
 
 import java.sql.*;
+import geniusBot.Config;
 
 public class MySQLConnection
 {
@@ -30,9 +31,13 @@ public class MySQLConnection
    
    public static Connection Connect() throws SQLException
    {
-      Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/"
-            + "dbname?useSSL=false&serverTimezone=UTC", "dbusername",
-            "dbpassword");
+      String dbhost = Config.getConfig("MYSQL_HOST");
+      String dbname = Config.getConfig("MYSQL_DATABASE_NAME");
+      String dbusername = Config.getConfig("MYSQL_USERNAME");
+      String dbpassword = Config.getConfig("MYSQL_PASSWORD");
+      Connection con = DriverManager.getConnection("jdbc:mysql://" + dbhost
+            + ":3306/" + dbname + "?useSSL=false&serverTimezone=UTC",
+            dbusername, dbpassword);
       return con;
    }
 }
