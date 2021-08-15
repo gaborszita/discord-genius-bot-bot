@@ -82,6 +82,7 @@ public class CountingWithMySQL extends ListenerAdapter
                   guildData.lastCountSenderId + "\",\"" + 
                   (guildData.botMessageSent ? 1 : 0)  + "\");");
          }
+         con.close();
       } 
       catch (SQLException e)
       {

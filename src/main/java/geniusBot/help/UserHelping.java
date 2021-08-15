@@ -66,6 +66,7 @@ public class UserHelping extends ListenerAdapter
                   sendMessage.append("g!help " + resultSet.getString(1) + " - " 
                         + resultSet.getString(2) + "\n");
                }
+               con.close();
                event.getChannel().sendMessage(sendMessage).queue();
             }
             catch(SQLException e)
@@ -90,6 +91,7 @@ public class UserHelping extends ListenerAdapter
                {
                   sendMessage.append(resultSet.getString(3));
                }
+               con.close();
                event.getChannel().sendMessage(sendMessage).queue();
             }
             catch(SQLException e)
