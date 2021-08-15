@@ -30,14 +30,8 @@ public class UserHelping extends ListenerAdapter
    private static final String helpMessage = 
          "These are the available help commands:\n";
 
-   MySQLConnection sqlConnection;
    public static final String SQL_HELP_DATA_TABLE = "help_commands";
    public static final String HELP_COMMAND = "help";
-
-   public UserHelping()
-   {
-      sqlConnection = new MySQLConnection();
-   }
 
    @Override
    public void onGuildMessageReceived(GuildMessageReceivedEvent event)
