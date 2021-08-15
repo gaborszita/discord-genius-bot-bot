@@ -21,19 +21,19 @@ Bot setup:
    edit the file and replace all ```YOUR_SOMETHING``` entries with the correct 
    value.
 
-4. Compiling and creating the executable jar file:
+3. Compiling and creating the executable jar file:
    
    First, make sure maven is installed on your system. Create the executable 
    jar file by running ```mvn package```. The jar file should be in the target 
    directory. This contains all resources needed to run the bot.
 
-5. Starting the bot:
+4. Starting the bot:
    
    Start the bot by running 
    ```java -jar "DiscordGeniusBot-0.0-SNAPSHOT.jar"``` in the target directory.
 
-   You run this file anywhere, it has everything included. So, for 
-   example, if you want to run this bot on a server, just have to copy this 
-   jar file. Make sure that you also copy the ```botconfig.txt``` file and 
-   place it in the java working directory. (By default it's the same as where 
-   the jar file is located.)
+   You can run this file anywhere, it has everything included. So, for 
+   example, if you want to run this bot on a server, you just have to copy 
+   this jar file. Make sure that you also copy the ```botconfig.txt``` file 
+   and place it in the java working directory. (By default it's the same as 
+   where the jar file is located.)
