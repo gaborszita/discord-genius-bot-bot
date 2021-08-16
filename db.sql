@@ -43,6 +43,28 @@ LOCK TABLES `counter_guild_data` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `greeting_guild_data`
+--
+
+DROP TABLE IF EXISTS `greeting_guild_data`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `greeting_guild_data` (
+  `guildId` bigint(20) NOT NULL,
+  PRIMARY KEY (`guildId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `greeting_guild_data`
+--
+
+LOCK TABLES `greeting_guild_data` WRITE;
+/*!40000 ALTER TABLE `greeting_guild_data` DISABLE KEYS */;
+/*!40000 ALTER TABLE `greeting_guild_data` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `help_commands`
 --
 
@@ -75,4 +97,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-08-09 23:48:30
+-- Dump completed on 2021-08-16  1:33:22
