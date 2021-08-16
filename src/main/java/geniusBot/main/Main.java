@@ -22,16 +22,13 @@ package geniusBot.main;
 import javax.security.auth.login.LoginException;
 
 import geniusBot.Keys;
-import geniusBot.communicating.Communicating;
+import geniusBot.greeting.Greeting;
 import geniusBot.counting.CountingWithMySQL;
 import geniusBot.moderating.Moderating;
 import geniusBot.musicUtilities.MusicCore;
 import geniusBot.help.UserHelping;
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.RichPresence;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class Main 
 {
@@ -53,7 +50,7 @@ public class Main
       jda.getPresence().setActivity(Activity.playing("g!help | " +
               "geniusbot.gaborszita.net"));
 
-      jda.addEventListener(new Communicating());
+      jda.addEventListener(new Greeting());
       jda.addEventListener(new CountingWithMySQL());
       jda.addEventListener(new Moderating());
       jda.addEventListener(new MusicCore());
