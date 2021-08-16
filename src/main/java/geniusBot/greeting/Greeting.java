@@ -19,12 +19,21 @@
 
 package geniusBot.greeting;
 
+import geniusBot.mySQLutils.MySQLConnection;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 public class Greeting extends ListenerAdapter
 {
+   public static final String SQL_GREETING_GUILD_DATA_TABLE =
+           "greeting_guild_data";
+
    @Override
    public void onGuildMessageReceived(GuildMessageReceivedEvent event)
    {
@@ -34,16 +43,49 @@ public class Greeting extends ListenerAdapter
          String msgData = (" " + msg.getContentRaw() + " ").toLowerCase();
          if (msgData.contains(" hi ") || msgData.contains(" hello "))
          {
-            MessageChannel channel = event.getChannel();
-            channel.sendMessage("Hello, <@" + event.getAuthor().getId() + 
-                  ">").queue();;
+            long guildId = event.getGuild().getIdLong();
+            if (checkGuildGreetingEnabled(guildId))
+            {
+               MessageChannel channel = event.getChannel();
+               channel.sendMessage("Hello, <@" + event.getAuthor().getId() +
+                       ">").queue();
+            }
          }
          if (msgData.contains(" what's up ") || msgData.contains(" wassup "))
          {
-            MessageChannel channel = event.getChannel();
-            channel.sendMessage("I'm doing great, <@" + event.getAuthor().getId() + 
-                  ">").queue();;
+            long guildId = event.getGuild().getIdLong();
+            if (checkGuildGreetingEnabled(guildId)) {
+               MessageChannel channel = event.getChannel();
+               channel.sendMessage("I'm doing great, <@" + event.getAuthor().getId() +
+                       ">").queue();
+            }
          }
+      }
+   }
+
+   public static boolean checkGuildGreetingEnabled(long guildId)
+   {
+      try
+      {
+         Connection con = MySQLConnection.getConnection();
+         Statement statement = con.createStatement();
+         ResultSet resultSet = statement.executeQuery("SELECT * FROM "
+                 + SQL_GREETING_GUILD_DATA_TABLE + " WHERE guildId = \""
+                 + guildId + "\";");
+
+         boolean enabled;
+         if (resultSet.next())
+            enabled = true;
+         else
+            enabled = false;
+
+         con.close();
+         return enabled;
+      }
+      catch (SQLException e)
+      {
+         e.printStackTrace();
+         return false;
       }
    }
 }
