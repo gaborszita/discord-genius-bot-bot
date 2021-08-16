@@ -87,6 +87,29 @@ LOCK TABLES `help_commands` WRITE;
 INSERT INTO `help_commands` VALUES ('music','Music player help','g!connect - connects Genius Bot to your voice channel\ng!disconnect - disconnects Genius Bot from your voice channel\ng!play track - to play a track, track can be a url or even just the name of the song\ng!stop - to stop playing\ng!pause - to pause the currently playing track\ng!resume - to resume the currently playing track\ng!next - to skip to next track in the queue\ng!recognize - to recognize a song. Hum, sing, or even put your mic to a speaker that is playing a song and Genius Bot will recognize the song playing!\ng!recognize play - Same as g!recognize, but Genius Bot will start playing the song after it\'s recognized.');
 /*!40000 ALTER TABLE `help_commands` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `offensive_words_patrol_guild_data`
+--
+
+DROP TABLE IF EXISTS `offensive_words_patrol_guild_data`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `offensive_words_patrol_guild_data` (
+  `guildId` bigint(20) NOT NULL,
+  `watchNSFW` tinyint(1) DEFAULT 0,
+  PRIMARY KEY (`guildId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `offensive_words_patrol_guild_data`
+--
+
+LOCK TABLES `offensive_words_patrol_guild_data` WRITE;
+/*!40000 ALTER TABLE `offensive_words_patrol_guild_data` DISABLE KEYS */;
+/*!40000 ALTER TABLE `offensive_words_patrol_guild_data` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -97,4 +120,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-08-16  1:33:22
+-- Dump completed on 2021-08-16 18:23:27
