@@ -17,13 +17,13 @@
  * along with Discord Genius Bot.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package geniusBot.moderating;
+package geniusBot.offensiveWordsPatrol;
 
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-public class Moderating extends ListenerAdapter
+public class OffensiveWordsPatrol extends ListenerAdapter
 {
    public static final String[] BAD_WORDS = {"fuck", "bitch", "shit"};
 

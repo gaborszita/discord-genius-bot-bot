@@ -24,7 +24,7 @@ import javax.security.auth.login.LoginException;
 import geniusBot.Keys;
 import geniusBot.greeting.Greeting;
 import geniusBot.counting.CountingWithMySQL;
-import geniusBot.moderating.Moderating;
+import geniusBot.offensiveWordsPatrol.OffensiveWordsPatrol;
 import geniusBot.musicUtilities.MusicCore;
 import geniusBot.help.UserHelping;
 import net.dv8tion.jda.api.*;
@@ -52,7 +52,7 @@ public class Main
 
       jda.addEventListener(new Greeting());
       jda.addEventListener(new CountingWithMySQL());
-      jda.addEventListener(new Moderating());
+      jda.addEventListener(new OffensiveWordsPatrol());
       jda.addEventListener(new MusicCore());
       jda.addEventListener(new UserHelping());
    }
