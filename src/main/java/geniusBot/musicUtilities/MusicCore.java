@@ -77,11 +77,25 @@ public class MusicCore extends ListenerAdapter
          GuildAudioDataHolder audioDataHolder = 
                getGuildAudioDataHolderFromEvent(event);
 
+         String[] validCommands = {"connect", "disconnect", "play", "stop",
+                 "pause", "resume", "next"};
          boolean boundChannelChanged = false;
          if(!event.getChannel().equals(audioDataHolder.boundChannel))
          {
-            audioDataHolder.boundChannel = event.getChannel();
-            boundChannelChanged = true;
+            boolean found = false;
+            for (String c : validCommands)
+            {
+               if (commands[0].equals(c))
+               {
+                  found = true;
+                  break;
+               }
+            }
+            if (found)
+            {
+               audioDataHolder.boundChannel = event.getChannel();
+               boundChannelChanged = true;
+            }
          }
 
          try
